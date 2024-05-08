@@ -1,0 +1,5 @@
+home_away,ab,r,h,rbi,bb,so,pa,batting_avg,onbase_perc,slugging_perc,onbase_plus_slugging,pitches,strikes_total,wpa_bat,leverage_index_avg,wpa_bat_pos,wpa_bat_neg,re24_bat,po,a,game_id
+home,30,5,9,5,3,13,33,.300,0.364,0.5,0.864,146,94,N/A,N/A,N/A,N/A,N/A,24,3,NYYDET20240505D
+away,29,2,5,2,2,11,31,.172,0.226,0.241,0.467,132,86,N/A,N/A,N/A,N/A,N/A,21,3,NYYDET20240505D
+home,34,6,10,6,4,7,38,.294,0.368,0.559,0.927,136,83,N/A,N/A,N/A,N/A,N/A,27,3,PHISF20240506D
+away,31,1,5,1,1,13,33,.161,0.182,0.194,0.376,133,86,N/A,N/A,N/A,N/A,N/A,24,8,PHISF20240506D

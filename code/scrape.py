@@ -2,7 +2,8 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup as bs
 import threading
-
+import datetime
+import lxml
 def get_today_games():
     '''
     pulls down today's games from https://www.baseball-reference.com/previews/
@@ -36,7 +37,7 @@ def get_today_games():
             print("no pitcher", game)
         games.append(game)
     test_df = pd.DataFrame(games)
-    test_df['date']=pd.datetime.now().date()
+    test_df['date']=datetime.date.today()
     return test_df
 
 def process_link(link, lock=None):

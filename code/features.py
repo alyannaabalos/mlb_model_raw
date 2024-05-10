@@ -9,6 +9,10 @@ def game_stats(games,df):
     '''
     adds season to date stats from rolling through dataframe
     '''
+
+    games['date'] = pd.to_datetime(games['date'])
+
+    print("GAMES DATE:",games['date']  )
     # make sure we have the same games in the same order in both df's
     games = games.sort_values(by=['date','game_id']).reset_index(drop=True)
     df = df.sort_values(by=['date','game_id']).reset_index(drop=True)
@@ -267,25 +271,37 @@ def add_season_rolling(stat_df, df, cols, team, name):
 
     return df
 
-def add_10RA_rolling(stat_df, df, cols, team, name):
+def add_10RA_rolling(stat_df, original_df, cols, team):
+
     try:
+        # Create a copy to avoid modifying the original DataFrame during calculations
+        result_df = stat_df.copy()
+        print(result_df['team'])
+        # Determine the grouping column based on the 'team' flag
+        group_col = 'team' if team else 'name'
+
+        # Apply the rolling mean computation to specified columns and create new column names
         for s in cols:
-            if team:
-                # Using transform to ensure the index alignment is maintained
-                stat_df[s + '_10RA'] = stat_df.groupby('team')[s].transform(
-                    lambda x: x.rolling(10, min_periods=1).mean()
-                )
-            else:
-                stat_df[s + '_10RA'] = stat_df.groupby('name')[s].transform(
-                    lambda x: x.rolling(10, min_periods=1).mean()
-                )
+            new_col_name = s + '_10RA'
+            result_df[new_col_name] = result_df.groupby(group_col)[s].transform(
+                lambda x: x.rolling(10, min_periods=1).mean()
+            )
+
+        # After creating new columns in result_df, merge these back into the original DataFrame
+        # Only select the new rolling average columns and the key for merging (group_col)
+        cols_to_merge = [col for col in result_df.columns if '_10RA' in col]
+        cols_to_merge.append('game_id')
+        merge_df = result_df[cols_to_merge].drop_duplicates()
+
+        # Merge this DataFrame back into the original DataFrame on 'game_id'
+        original_df = original_df.merge(merge_df, on='game_id', how='left')
+     
     except KeyError as e:
         print(f"KeyError: {e} - Check if the grouping columns and target columns exist.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
-    return stat_df
-
+    return original_df
        
 def get_stats_from_dist(dist):
     d = np.array(dist).astype('float')
